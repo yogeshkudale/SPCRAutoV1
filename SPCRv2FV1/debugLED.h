@@ -9,9 +9,9 @@ void motorRunning() {
         ledState = LOW;
       }
       if (ledState == HIGH) {
-        PORTD |= (1 << ledDebug); // turn on LED
+        PORTD |= (1 << ledDebug);  // turn on LED
       } else {
-        PORTD &= ~(1 << ledDebug); // turn off LED
+        PORTD &= ~(1 << ledDebug);  // turn off LED
       }
     }
   } else {
@@ -20,15 +20,14 @@ void motorRunning() {
       previousmotorRunningStateMillis = currentmotorRunningStateMillis;
       if (ledState == HIGH) {
         ledState = LOW;
-        PORTD &= ~(1 << ledDebug); // turn off LED
+        PORTD &= ~(1 << ledDebug);  // turn off LED
       }
     }
   }
 }
 
 
-void msgReceived()
-{
+void msgReceived() {
   unsigned long currentmsgReceivedStateMillis = millis();
   if (currentmsgReceivedStateMillis - previousNmsgReceivedStateMillis >= intervalmsgReceivedStateMillis) {
     // save the last time you blinked the LED
@@ -53,19 +52,18 @@ void msgReceived()
   }
 }
 
-void networkConnected()
-{
+void networkConnected() {
   unsigned long currentLoraLEDMillis = millis();
   if (currentLoraLEDMillis - previousNetworkLEDMillis >= intervalNetworkLEDMillis && is_join == false) {
     previousNetworkLEDMillis = currentLoraLEDMillis;
-          // printMessages("Network Connected");
+    // printMessages("Network Connected");
 
     if (ledState == LOW) {
       ledState = HIGH;
-      PORTD |= (1 << ledLora); // turn on the LED on the specified pin
+      PORTD |= (1 << ledLora);  // turn on the LED on the specified pin
     } else {
       ledState = LOW;
-      PORTD &= ~(1 << ledLora); // turn off the LED on the specified pin
+      PORTD &= ~(1 << ledLora);  // turn off the LED on the specified pin
     }
   }
 }

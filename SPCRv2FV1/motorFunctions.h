@@ -214,62 +214,72 @@ void getMotorSettings(){
   }
 
 
-  // if (wheelPWM1State == HIGH) {
+  if (wheelPWM1State == HIGH) {
 
-  //   //Code to SET PWM1
-  //   wheelPWM1();
-  //   wheelPWM1State = LOW;
-  //     printMessages("Wheel Speed set to LOW!");
+    //Code to SET PWM1
+    wheelPWM1();
+    wheelPWM1State = LOW;
+      printMessages("Wheel Speed set to LOW!");
 
-  // }
-  // if (wheelPWM2State == HIGH) {
+  }
+  if (wheelPWM2State == HIGH) {
 
-  //   //Code to SET PWM2
-  //   wheelPWM2();
-  //   wheelPWM2State = LOW;
-  //         printMessages("Wheel Speed set to MEDIUM!");
-
-
-  // }
-  // if (wheelPWM3State == HIGH) {
-
-  //   //Code to SET PWM3
-  //   wheelPWM3();
-  //   wheelPWM3State = LOW;
-  //             printMessages("Wheel Speed set to HIGH!");
-
-  // }
-  // if (brushPWM1State == HIGH) {
-
-  //   //Code to SET PWM1
-  //   brushPWM1();
-  //   brushPWM1State = LOW;
-  //                 printMessages("BRUSH Speed set to LOW!");
-
-  // }
-  // if (brushPWM2State == HIGH) {
-
-  //   //Code to SET PWM2
-  //   brushPWM2();
-  //   brushPWM2State = LOW;
-  //                     printMessages("BRUSH Speed set to MEDIUM!");
-
-  // }
-  // if (brushPWM3State == HIGH) {
-
-  //   //Code to SET PWM3
-  //   brushPWM3();
-  //   brushPWM3State = LOW;
-  //                         printMessages("BRUSH Speed set to HIGH!");
+    //Code to SET PWM2
+    wheelPWM2();
+    wheelPWM2State = LOW;
+          printMessages("Wheel Speed set to MEDIUM!");
 
 
-  // }
+  }
+  if (wheelPWM3State == HIGH) {
+
+    //Code to SET PWM3
+    wheelPWM3();
+    wheelPWM3State = LOW;
+              printMessages("Wheel Speed set to HIGH!");
+
+  }
+  if (brushPWM1State == HIGH) {
+
+    //Code to SET PWM1
+    brushPWM1();
+    brushPWM1State = LOW;
+                  printMessages("BRUSH Speed set to LOW!");
+
+  }
+  if (brushPWM2State == HIGH) {
+
+    //Code to SET PWM2
+    brushPWM2();
+    brushPWM2State = LOW;
+                      printMessages("BRUSH Speed set to MEDIUM!");
+
+  }
+  if (brushPWM3State == HIGH) {
+
+    //Code to SET PWM3
+    brushPWM3();
+    brushPWM3State = LOW;
+                          printMessages("BRUSH Speed set to HIGH!");
+
+
+  }
 
     if (brushSpeedUpdate == HIGH) {
 
     //Code to SET PWM3
     updateBrushSpeed();
     brushSpeedUpdate = LOW;
+    // printMessages("BRUSH Speed set to HIGH!");
+
+
+  }
+
+    if (dockingSpeedUpdate == HIGH) {
+
+    //Code to SET PWM3
+    updateDockingSpeed();
+    dockingSpeedUpdate = LOW;
     // printMessages("BRUSH Speed set to HIGH!");
 
 

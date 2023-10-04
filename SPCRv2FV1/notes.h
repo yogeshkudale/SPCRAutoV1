@@ -54,7 +54,7 @@
   PB"Value" = Brush PWM Value
   T"Value" = Board Temperature
   AD -  At Dock
-*/
+
 
 --
 This is a device which performs solar panel clenaing. We are writing a firmware for a solar panel cleaning robot.

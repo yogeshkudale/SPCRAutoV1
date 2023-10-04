@@ -59,6 +59,14 @@ int testMode = 0;
 int executeManualReturnCycle = 0;
 int brushSpeedUpdate = 0;
 int wheelSpeedUpdate = 0;
+int dockingSpeedUpdate = 0;
+int wheelCurrentUpdate = 0;
+int brushCurrentUpdate = 0;
+int brushCurrentReceived;
+int wheelCurrentReceived;
+int getFirmwareVersion = 0;
+int deviceSerialNumberUpdate = 0;
+int sendDeviceSerialNumber = 0;
 //sendMessageFlags
 int sendData = 0;
 int sendMessage = 0;

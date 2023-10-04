@@ -1,8 +1,12 @@
 
 
 String  Hardware = "TAMS-V1.1";
-String  Firmware = "LoraTAMSV11.2";
+String  Firmware = "12.1";
 
+String inputString = "";         // a string to hold incoming data
+bool stringComplete = false;  // whether the string is complete
+
+int ret;
 
 int last_brushPWMvalue;
 int last_wheelPWMvalue;
@@ -66,7 +70,7 @@ int set60WattMode = 0;
 /* End of Motor Variables */
 int brushSpeedReceived;
 int wheelSpeedReceived;
-
+int dockingSpeedReceived;
 
 int overTempLimit = 45;
 
@@ -92,7 +96,7 @@ long timeIntervalSendCurrent = 540000;
 
 //Time interval for retry attempts to connect network
 unsigned long previousJoinLora = millis();
-long timeIntervalJoinLora = 10000;
+long timeIntervalJoinLora = 30000;
 
 //Frequency to blink after network is connected
 unsigned long previousNetworkLEDMillis = millis();
@@ -115,23 +119,23 @@ unsigned long previousTempMillis = millis();
 long intervalTempMillis = 600000;
 
 
-// void wheelPWM1()
-// {
-//   writeStringToEEPROM(topic_speed_wheel_offset_address, "180"); //Update to EPROM
-//   printMessages("set wheel PWM to LOW Success");
-// }
+void wheelPWM1()
+{
+  writeStringToEEPROM(topic_speed_wheel_offset_address, "180"); //Update to EPROM
+  printMessages("set wheel PWM to LOW Success");
+}
 
-// void wheelPWM2()
-// {
-//   writeStringToEEPROM(topic_speed_wheel_offset_address, "220"); //Update to EPROM
-//   printMessages("set wheel PWM to MEDIUM Success");
-// }
+void wheelPWM2()
+{
+  writeStringToEEPROM(topic_speed_wheel_offset_address, "220"); //Update to EPROM
+  printMessages("set wheel PWM to MEDIUM Success");
+}
 
-// void wheelPWM3()
-// {
-//   writeStringToEEPROM(topic_speed_wheel_offset_address, "250"); //Update to EPROM
-//   printMessages("set wheel PWM to HIGH Success");
-// }
+void wheelPWM3()
+{
+  writeStringToEEPROM(topic_speed_wheel_offset_address, "250"); //Update to EPROM
+  printMessages("set wheel PWM to HIGH Success");
+}
 void updateWheelSpeed()
 {
   writeStringToEEPROM(topic_speed_wheel_offset_address, String(wheelSpeedReceived)); //Update to EPROM
@@ -141,29 +145,38 @@ void updateWheelSpeed()
 
 }
 
-// void brushPWM1()
-// {
-//   writeStringToEEPROM(topic_speed_brush_offset_address, "180"); //Update to EPROM
-//   printMessages("set brush PWM to LOW Success");
-// }
+void brushPWM1()
+{
+  writeStringToEEPROM(topic_speed_brush_offset_address, "180"); //Update to EPROM
+  printMessages("set brush PWM to LOW Success");
+}
 
-// void brushPWM2()
-// {
-//   writeStringToEEPROM(topic_speed_brush_offset_address, "220"); //Update to EPROM
-//   printMessages("set brush PWM to MEDIUM Success");
-// }
+void brushPWM2()
+{
+  writeStringToEEPROM(topic_speed_brush_offset_address, "220"); //Update to EPROM
+  printMessages("set brush PWM to MEDIUM Success");
+}
 
-// void brushPWM3()
-// {
-//   writeStringToEEPROM(topic_speed_brush_offset_address, "250"); //Update to EPROM
-//   printMessages("set brush PWM to HIGH Success");
-// }
+void brushPWM3()
+{
+  writeStringToEEPROM(topic_speed_brush_offset_address, "250"); //Update to EPROM
+  printMessages("set brush PWM to HIGH Success");
+}
 
 void updateBrushSpeed()
 {
   writeStringToEEPROM(topic_speed_brush_offset_address, String(brushSpeedReceived)); //Update to EPROM
   printMessages("Brush Speed Setting Successful!");
   printMessages(String(brushSpeedReceived));
+
+
+}
+
+void updateDockingSpeed()
+{
+  writeStringToEEPROM(topic_brushMotorDockingSpeed_address, String(dockingSpeedReceived)); //Update to EPROM
+  printMessages("Brush Docking Speed Setting Successful!");
+  printMessages(String(dockingSpeedReceived));
 
 
 }

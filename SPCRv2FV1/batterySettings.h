@@ -21,30 +21,29 @@ int batteryVoltageInt() {
   return int(battery.level());
 }
 
-void batteryVoltageCheck()
-{
+void batteryVoltageCheck() {
   char cmd[128];
   int batteryVoltageValue = batteryVoltageInt();
   //    int batteryVoltageValue = random(40, 69);
   //  int batteryVoltageValue = 54;
   printMessages("BatteryVoltage");
   printMessages(String(batteryVoltageValue));
-  
+
 
   sprintf(cmd, "AT+MSG=B\%d\r\n", batteryVoltageValue);
   int ret = at_send_check_response("+MSG: Done", 10000, cmd);
   if (ret) {
     printMessages("Sent");
-  }
-  else {
+  } else {
     printMessages("Send failed!\r\n\r\n");
   }
 
 
+
+
   //Battery Voltage Check
   if (automaticMode == 1 && batteryLowState == 0) {
-    if (batteryVoltageValue < 10)
-    {
+    if (batteryVoltageValue < 10) {
       Serial.print(battery.level());
       printMessages("Battery Low! Returning to dock and entering Sleep Mode. Please charge the battery...");
       //Cancel Everyhing
@@ -60,8 +59,7 @@ void batteryVoltageCheck()
     }
   }
   if (automaticMode == 0) {
-    if (batteryVoltageValue < 1 )
-    {
+    if (batteryVoltageValue < 1) {
       printMessages("Battery Low! Stopping motors to avoid battery failure. Please charge the battery...");
       //Cancel Everyhing
       testMode = 0;
@@ -73,15 +71,13 @@ void batteryVoltageCheck()
       sendBatteryLow = 1;
     }
   }
-
 }
- void checkBatteryVoltage(){
-  
+void checkBatteryVoltage() {
+
   unsigned long currentTimeSendMessages = millis();
 
   //   Sync with server Message
-  if (is_exist)
-  {
+  if (is_exist) {
     if (currentTimeSendMessages - previousTimeSendMessage > timeIntervalSendMessage) {
       previousTimeSendMessage = currentTimeSendMessages;
 
@@ -90,5 +86,4 @@ void batteryVoltageCheck()
       batteryLowState = 0;
     }
   }
-
- }
+}

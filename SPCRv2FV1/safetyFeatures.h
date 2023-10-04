@@ -5,8 +5,8 @@ void safetyFeatures()
   //Connect to LoraWAN Network Server or check if still connected
   if (currentTimeJoinLNS - previousJoinLora > timeIntervalJoinLora) {
     previousJoinLora = currentTimeJoinLNS;
-    printMessages("Checking Network Status!");
-
+    // printMessages("Checking Network Status!");
+    // LinkCheckReq();
     connectLNS();
   }
 
@@ -127,7 +127,7 @@ void safetyFeatures()
 
   //   Send Board Temperature to Server
 
-    unsigned long currentTimeSendTemp = millis();
+  unsigned long currentTimeSendTemp = millis();
 
   if (is_exist)
   {

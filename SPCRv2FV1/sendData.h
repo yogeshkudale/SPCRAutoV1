@@ -1,8 +1,37 @@
-void sendMotorCurrentValues()
-{
-  char cmd[128];
+unsigned long lastExecutionTime = 0;
 
-  sprintf(cmd, "AT+MSG=MD\%dMB%d\r\n", driveMotorCurrentValue, brushMotorCurrentValue);
+void sendMotorCurrentValues() {
+    char cmd[128];
+    sprintf(cmd, "AT+MSG=MD%%dMB%d\r\n", driveMotorCurrentValue, brushMotorCurrentValue);
+    
+    int ret = at_send_check_response("+MSG: Done", 10000, cmd);
+    if (ret) {
+        printMessages("Sent");
+    } else {
+        printMessages("Send failed!\r\n\r\n");
+    }
+
+    // Non-blocking delay replacement
+    if (millis() - lastExecutionTime >= 1000) {
+        lastExecutionTime = millis();
+
+        if (at_send_check_response("+TEMP:", 1000, "AT+TEMP\r\n")) {
+            char tempString[10];  // Assuming the temperature string is not more than 9 characters + null terminator
+            strncpy(tempString, recv_buf + 6, 4);  // Copying 4 characters from recv_buf starting from the 6th position
+            tempString[4] = '\0';  // Null-terminate the string
+
+            float tempValue = atof(tempString) * 1000;  // Convert the string to float
+            Serial.println(tempValue);
+        }
+    }
+}
+
+void sendMessagestoServer() {
+
+if (getFirmwareVersion == 1){
+
+  char cmd[128];
+  sprintf(cmd, "AT+MSG=FV\%d\r\n", Firmware);
   int ret = at_send_check_response("+MSG: Done", 10000, cmd);
   if (ret) {
     printMessages("Sent");
@@ -10,18 +39,26 @@ void sendMotorCurrentValues()
   else {
     printMessages("Send failed!\r\n\r\n");
   }
-  delay(500);
-
-  if (at_send_check_response("+TEMP:", 1000, "AT+TEMP\r\n"))
-  {
-    String tempString = String(recv_buf + 6);
-    String actualtemp = tempString.substring(0, 4);
-    temp = actualtemp.toFloat() * 1000;
-    Serial.println(temp);
-  }
-
+  
+  getFirmwareVersion = 0;
 }
-void sendMessagestoServer() {
+
+if (sendDeviceSerialNumber == 1){
+
+  char cmd[128];
+  sprintf(cmd, "AT+MSG=SN\%d\r\n", deviceSerialNumber);
+  int ret = at_send_check_response("+MSG: Done", 10000, cmd);
+  if (ret) {
+    printMessages("Sent");
+  }
+  else {
+    printMessages("Send failed!\r\n\r\n");
+  }
+  
+  sendDeviceSerialNumber = 0;
+}
+
+
   unsigned long currentTimeCheckDock = millis();
 
   //Check If Robot is At Dock if yes send at dock
