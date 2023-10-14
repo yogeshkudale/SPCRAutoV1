@@ -10,6 +10,8 @@
 #define topic_wheelMotorLimit_address 300
 #define FirstTimeUpload_address 330
 #define deviceSerialNumber_address 330
+#define firmwareUpdatedTimestamp 390
+
 
 String topic_speed_wheel_eeprom_value;
 String topic_speed_brush_eeprom_value;
@@ -71,7 +73,7 @@ void firstTimeSettings() {
     writeStringToEEPROM(topic_wheelMotorLimit_address, topic_wheelMotorLimit_value_default);
     writeStringToEEPROM(FirstTimeUpload_address, FirstTimeUpload_value_default);
     writeStringToEEPROM(deviceSerialNumber_address, deviceSerialNumber_default);
-
+    int updateFirmware = 1;
     FirstTimeUploadCheck = 1;
     Serial.println("Settings Updated Successfully!");
 

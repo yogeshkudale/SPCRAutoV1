@@ -27,7 +27,7 @@ void safetyFeatures()
   if (driveMotorCurrentValue > wheelMotorCurrentLimit)
   {
         printMessages("Wheel OverCurrent Detected!");
-
+if(enableMotorCurrentCheck  == 1){
     // increment drive motor current over limit counter
     driveMotorCurrentOverLimitTime += intervalCurrentCheckMillis;
 
@@ -62,13 +62,14 @@ void safetyFeatures()
     // reset drive motor current over limit counter if current is below the limit
     driveMotorCurrentOverLimitTime = 0;
   }
-
+}
   // repeat the same logic for brush motor current if needed
   // check if drive motor current is over the limit
   if (brushMotorCurrentValue > burshMotorCurrentLimit)
   {
             printMessages("Brush OverCurrent Detected!");
 
+if (enableMotorCurrentCheck == 1){
     // increment drive motor current over limit counter
     brushMotorCurrentOverLimitTime += intervalCurrentCheckMillis;
 
@@ -103,6 +104,7 @@ void safetyFeatures()
     // reset drive motor current over limit counter if current is below the limit
     brushMotorCurrentOverLimitTime = 0;
   }
+}
 
   if (testMode == 1 && executeCycle == 0) {
     executeCleaning = 1; // Testbed Test Mode

@@ -1,24 +1,38 @@
+
+
+bool enableSerialDebug = false;  // Set to true to enable, false to disable
+
+
+String  Hardware = "TAMS-V1.1";
+String  Firmware = "12.3";
+
+
+#include <avr/wdt.h>
+
+
 #include <EEPROM.h>
-#include "pins.h";
-#include "eepromSettings.h";
-#include "stateFlags.h";
-#include "setup.h";
-#include "loraSettings.h";
 
-#include "batterySettings.h";
+#include "pins.h"
+#include "eepromSettings.h"
+#include "stateFlags.h"
+#include "setup.h"
+#include "loraSettings.h"
 
-#include "sendData.h";
-#include "safetyFeatures.h";
+#include "batterySettings.h"
 
-#include "debugLED.h";
+#include "sendData.h"
+#include "safetyFeatures.h"
 
-#include "motorFunctions.h";
-#include "manualMode.h";
-#include "automaticMode.h";
+#include "debugLED.h"
+
+#include "motorFunctions.h"
+#include "manualMode.h"
+#include "automaticMode.h"
 
 void setup() {
 
   Serial.begin(9600);
+
   inputString.reserve(200);  // reserve 200 bytes for the inputString
 
   // Set Lora baud rate
@@ -69,17 +83,33 @@ void setup() {
   Serial.println(vdd);
   //  batteryVoltageRead();
   Serial.print("Battery voltage is ");
-  Serial.print(battery.voltage());
+  Serial.print(getAverageBatteryVoltage());
   Serial.print("mV (");
-  Serial.print(battery.level());
+  Serial.print(getAverageBatteryLevel());
   Serial.println("%)");
 
   //  testMode = 1; //Turn On TEST Mode
   setMotorCurrentLimits();  //motorFunctions.h
+
+if(updateFirmware == 1){
+updatFirmware();
+updateFirmware = 0;
+}
+
+readFirmwareUpdatedDate();
+
+    Serial.print("freeMemory:");
+    Serial.println(freeMemory());
+
+
+checkResetCause();
+
+
+
 }
 
 void loop() {
-
+wdt_reset();
   // read the state of the sensor value:
   leftSensorState = (PIND & (1 << leftSensor)) >> leftSensor;
   rightSensorState = (PIND & (1 << rightSensor)) >> rightSensor;

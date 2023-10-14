@@ -4,29 +4,29 @@ void setMotorCurrentLimits() {
   readStringFromEEPROM(topic_wheelMotorLimit_address, &topic_wheelMotorLimit_value);
   wheelMotorCurrentLimit = topic_wheelMotorLimit_value.toInt();
   printMessages("Motor Current Limits Fetched");
-
 }
 
 
 
-void cleanRight()
-{
+void cleanRight() {
   printMessages(String(brushMotorCurrentValue));
   printMessages("Clean Right");
   readStringFromEEPROM(topic_speed_wheel_offset_address, &topic_speed_wheel_eeprom_value);
   wheelPWMvalue = topic_speed_wheel_eeprom_value.toInt();
   readStringFromEEPROM(topic_speed_brush_offset_address, &topic_speed_brush_eeprom_value);
   brushPWMvalue = topic_speed_brush_eeprom_value.toInt();
-  motorRunningState  = HIGH;
+  motorRunningState = HIGH;
   cleanRightFlag = HIGH;
 
   //SerialMon.println("Moving Right");
   curr_state = 'R';
-  PORTB &= ~(1 << wheel_direction); // Set wheel direction to LOW (cleaning right side)
-  PORTB &= ~(1 << brush_direction); // Set brush direction to LOW (cleaning right side)
+  PORTB &= ~(1 << wheel_direction);  // Set wheel direction to LOW (cleaning right side)
+  PORTB &= ~(1 << brush_direction);  // Set brush direction to LOW (cleaning right side)
   // Start Motor 2 from 0% to 100% PWM
-
-  for (int i = currentBrushPWM; i < brushPWMvalue; i++) {
+  if (enableMotorRampup = 0) {
+    analogWrite(brush_pwm, brushPWMvalue);
+  }
+  for (int i = currentBrushPWM; i <= brushPWMvalue; i++) {
     analogWrite(brush_pwm, i);
     Serial.println(i);
     delay(15);
@@ -35,27 +35,24 @@ void cleanRight()
 
   delay(100);
   // Start Motor 1 from 0% to 100% PWM
-  for (int i = currentWheelPWM; i < wheelPWMvalue; i++) {
+  for (int i = currentWheelPWM; i <= wheelPWMvalue; i++) {
     analogWrite(wheel_pwm, i);
     Serial.println(i);
     delay(10);
   }
   currentWheelPWM = wheelPWMvalue;
-
-
 }
 
-void cleanLeft()
-{
+void cleanLeft() {
 
-    float driveMotorCurrentAmps = adc_to_current(driveMotorCurrentValue);
+  float driveMotorCurrentAmps = adc_to_current(driveMotorCurrentValue);
   float brushMotorCurrentAmps = adc_to_current(brushMotorCurrentValue);
-      printMessages("D");
+  printMessages("D");
   printMessages(String(driveMotorCurrentAmps));
   printMessages("A");
 
-    printMessages("B");
-    printMessages(String(brushMotorCurrentAmps));
+  printMessages("B");
+  printMessages(String(brushMotorCurrentAmps));
   printMessages("A");
 
 
@@ -64,16 +61,19 @@ void cleanLeft()
   wheelPWMvalue = topic_speed_wheel_eeprom_value.toInt();
   readStringFromEEPROM(topic_speed_brush_offset_address, &topic_speed_brush_eeprom_value);
   brushPWMvalue = topic_speed_brush_eeprom_value.toInt();
-  motorRunningState  = HIGH;
+  motorRunningState = HIGH;
   cleanLeftFlag = HIGH;
   //SerialMon.println("Moving Left");
   curr_state = 'L';
 
-  PORTB |= (1 << wheel_direction); // Set wheel direction to HIGH (cleaning left side)
-  PORTB |= (1 << brush_direction); // Set brush direction to HIGH (cleaning left side)
+  PORTB |= (1 << wheel_direction);  // Set wheel direction to HIGH (cleaning left side)
+  PORTB |= (1 << brush_direction);  // Set brush direction to HIGH (cleaning left side)
 
+  if (enableMotorRampup = 0) {
+    analogWrite(brush_pwm, brushPWMvalue);
+  }
   // Start Motor 2 from 0% to 100% PWM
-  for (int i = currentBrushPWM; i < brushPWMvalue; i++) {
+  for (int i = currentBrushPWM; i <= brushPWMvalue; i++) {
     analogWrite(brush_pwm, i);
     Serial.println(i);
     delay(15);
@@ -81,19 +81,15 @@ void cleanLeft()
   currentBrushPWM = brushPWMvalue;
   delay(100);
   // Start Motor 1 from 0% to 100% PWM
-  for (int i = currentWheelPWM; i < wheelPWMvalue; i++) {
+  for (int i = currentWheelPWM; i <= wheelPWMvalue; i++) {
     analogWrite(wheel_pwm, i);
     Serial.println(i);
     delay(10);
   }
   currentWheelPWM = wheelPWMvalue;
-
-
-
 }
 
-void stopMotors()
-{
+void stopMotors() {
 
   curr_state = 'S';
 
@@ -103,34 +99,36 @@ void stopMotors()
   readStringFromEEPROM(topic_speed_brush_offset_address, &topic_speed_brush_eeprom_value);
   brushPWMvalue = topic_speed_brush_eeprom_value.toInt();
   // printMessages("Both Motors Stopped");
-  
+
   // Stop Motor 2 from 100% to 0% PWM
-  for (int i = currentBrushPWM; i > 0; i--) {
+  for (int i = currentBrushPWM; i >= 0; i--) {
     analogWrite(brush_pwm, i);
     Serial.println(i);
     delay(20);
   }
   currentBrushPWM = 0;
-  currentWheelPWM = 0; 
-  motorRunningState  = LOW;
-
+  currentWheelPWM = 0;
+  motorRunningState = LOW;
 }
 
-void moveRight()
-{
+void moveRight() {
   printMessages("Move Right");
   readStringFromEEPROM(topic_speed_wheel_offset_address, &topic_speed_wheel_eeprom_value);
   wheelPWMvalue = topic_speed_wheel_eeprom_value.toInt();
   readStringFromEEPROM(topic_brushMotorDockingSpeed_address, &topic_BrushMotorDockingSpeed_value);
   antiStuckBrushPWM = topic_BrushMotorDockingSpeed_value.toInt();
-  motorRunningState  = HIGH;
+  motorRunningState = HIGH;
 
   curr_state = 'R';
 
-  PORTB &= ~(1 << wheel_direction); // Set wheel direction to LOW (cleaning right side)
-  PORTB &= ~(1 << brush_direction); // Set brush direction to LOW (cleaning right side)
+  PORTB &= ~(1 << wheel_direction);  // Set wheel direction to LOW (cleaning right side)
+  PORTB &= ~(1 << brush_direction);  // Set brush direction to LOW (cleaning right side)
+
+  if (enableMotorRampup = 0) {
+    analogWrite(brush_pwm, antiStuckBrushPWM);
+  }
   // Start Motor 2 from 0% to 100% PWM
-  for (int i = currentBrushPWM; i < antiStuckBrushPWM; i++) {
+  for (int i = currentBrushPWM; i <= antiStuckBrushPWM; i++) {
     analogWrite(brush_pwm, i);
     Serial.println(i);
     delay(10);
@@ -138,32 +136,33 @@ void moveRight()
   currentBrushPWM = antiStuckBrushPWM;
   delay(100);
   // Start Motor 1 from 0% to 100% PWM
-  for (int i = currentWheelPWM; i < wheelPWMvalue; i++) {
+  for (int i = currentWheelPWM; i <= wheelPWMvalue; i++) {
     analogWrite(wheel_pwm, i);
     Serial.println(i);
     delay(10);
   }
   currentWheelPWM = wheelPWMvalue;
-
-
 }
 
-void moveLeft()
-{
+void moveLeft() {
   printMessages("Move Left");
   readStringFromEEPROM(topic_speed_wheel_offset_address, &topic_speed_wheel_eeprom_value);
   wheelPWMvalue = topic_speed_wheel_eeprom_value.toInt();
   readStringFromEEPROM(topic_brushMotorDockingSpeed_address, &topic_BrushMotorDockingSpeed_value);
-  antiStuckBrushPWM = topic_BrushMotorDockingSpeed_value.toInt();  
-  motorRunningState  = HIGH;
+  antiStuckBrushPWM = topic_BrushMotorDockingSpeed_value.toInt();
+  motorRunningState = HIGH;
 
   curr_state = 'L';
 
-  PORTB |= (1 << wheel_direction); // Set wheel direction to HIGH (cleaning left side)
-  PORTB |= (1 << brush_direction); // Set brush direction to HIGH (cleaning left side)
+  PORTB |= (1 << wheel_direction);  // Set wheel direction to HIGH (cleaning left side)
+  PORTB |= (1 << brush_direction);  // Set brush direction to HIGH (cleaning left side)
+
+  if (enableMotorRampup = 0) {
+    analogWrite(brush_pwm, antiStuckBrushPWM);
+  }
 
   // Start Motor 2 from 0% to 100% PWM
-  for (int i = currentBrushPWM; i < antiStuckBrushPWM; i++) {
+  for (int i = currentBrushPWM; i <= antiStuckBrushPWM; i++) {
     analogWrite(brush_pwm, i);
     Serial.println(i);
     delay(10);
@@ -172,11 +171,10 @@ void moveLeft()
   currentBrushPWM = antiStuckBrushPWM;
   delay(100);
   // Start Motor 1 from 0% to 100% PWM
-  for (int i = currentWheelPWM; i < wheelPWMvalue; i++) {
+  for (int i = currentWheelPWM; i <= wheelPWMvalue; i++) {
     analogWrite(wheel_pwm, i);
     Serial.println(i);
     delay(10);
-
   }
   currentWheelPWM = wheelPWMvalue;
 }
@@ -184,33 +182,28 @@ void moveLeft()
 
 
 
-void getMotorSettings(){
+void getMotorSettings() {
   if (wheelPWMGetState == HIGH) {
 
     //Code to get PWM
     wheelPWMGet();
     wheelPWMGetState = LOW;
-      printMessages("Wheel PWM sent");
-
+    printMessages("Wheel PWM sent");
   }
   if (burshPWMGetState == HIGH) {
 
     //Code to get PWM
     burshPWMGet();
     burshPWMGetState = LOW;
-      printMessages("Brush PWM Sent");
-
-
+    printMessages("Brush PWM Sent");
   }
 
-    if (wheelSpeedUpdate == HIGH) {
+  if (wheelSpeedUpdate == HIGH) {
 
     //Code to SET PWM3
     updateWheelSpeed();
     wheelSpeedUpdate = LOW;
     // printMessages("Wheel Speed set to HIGH!");
-
-
   }
 
 
@@ -219,87 +212,73 @@ void getMotorSettings(){
     //Code to SET PWM1
     wheelPWM1();
     wheelPWM1State = LOW;
-      printMessages("Wheel Speed set to LOW!");
-
+    printMessages("Wheel Speed set to LOW!");
   }
   if (wheelPWM2State == HIGH) {
 
     //Code to SET PWM2
     wheelPWM2();
     wheelPWM2State = LOW;
-          printMessages("Wheel Speed set to MEDIUM!");
-
-
+    printMessages("Wheel Speed set to MEDIUM!");
   }
   if (wheelPWM3State == HIGH) {
 
     //Code to SET PWM3
     wheelPWM3();
     wheelPWM3State = LOW;
-              printMessages("Wheel Speed set to HIGH!");
-
+    printMessages("Wheel Speed set to HIGH!");
   }
   if (brushPWM1State == HIGH) {
 
     //Code to SET PWM1
     brushPWM1();
     brushPWM1State = LOW;
-                  printMessages("BRUSH Speed set to LOW!");
-
+    printMessages("BRUSH Speed set to LOW!");
   }
   if (brushPWM2State == HIGH) {
 
     //Code to SET PWM2
     brushPWM2();
     brushPWM2State = LOW;
-                      printMessages("BRUSH Speed set to MEDIUM!");
-
+    printMessages("BRUSH Speed set to MEDIUM!");
   }
   if (brushPWM3State == HIGH) {
 
     //Code to SET PWM3
     brushPWM3();
     brushPWM3State = LOW;
-                          printMessages("BRUSH Speed set to HIGH!");
-
-
+    printMessages("BRUSH Speed set to HIGH!");
   }
 
-    if (brushSpeedUpdate == HIGH) {
+  if (brushSpeedUpdate == HIGH) {
 
     //Code to SET PWM3
     updateBrushSpeed();
     brushSpeedUpdate = LOW;
     // printMessages("BRUSH Speed set to HIGH!");
-
-
   }
 
-    if (dockingSpeedUpdate == HIGH) {
+  if (dockingSpeedUpdate == HIGH) {
 
     //Code to SET PWM3
     updateDockingSpeed();
     dockingSpeedUpdate = LOW;
     // printMessages("BRUSH Speed set to HIGH!");
-
-
   }
 
   if (set40WattMode == 1) {
-    writeStringToEEPROM(topic_brushMotorLimit_address, "230"); //Update to EPROM
+    writeStringToEEPROM(topic_brushMotorLimit_address, "230");  //Update to EPROM
     printMessages("40 Watt Brush Motor Mode Success");
-    writeStringToEEPROM(topic_wheelMotorLimit_address, "180"); //Update to EPROM
+    writeStringToEEPROM(topic_wheelMotorLimit_address, "180");  //Update to EPROM
     printMessages("40 Watt Brush Motor Mode for Wheel Success");
     set40WattMode = 0;
   }
 
   if (set60WattMode == 1) {
-    writeStringToEEPROM(topic_brushMotorLimit_address, "230"); //Update to EPROM
+    writeStringToEEPROM(topic_brushMotorLimit_address, "230");  //Update to EPROM
     printMessages("60 Watt Brush Motor Mode Success");
-    writeStringToEEPROM(topic_wheelMotorLimit_address, "210"); //Update to EPROM
+    writeStringToEEPROM(topic_wheelMotorLimit_address, "210");  //Update to EPROM
     printMessages("60 Watt Brush Motor Mode for Wheel Success");
     set60WattMode = 0;
-
   }
-
 }

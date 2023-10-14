@@ -8,17 +8,40 @@ int maxBatteryVoltage = 14200;
 
 Battery battery(minBatteryVoltage, maxBatteryVoltage, batteryVoltage);
 
+#define NUM_SAMPLES 10
+#define DELAY_BETWEEN_SAMPLES 10  // in milliseconds
+
+int getAverageBatteryLevel() {
+    int total = 0;
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        total += battery.level();
+        delay(DELAY_BETWEEN_SAMPLES);
+    }
+    return total / NUM_SAMPLES;
+}
+
+int getAverageBatteryVoltage() {
+    int total = 0;
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        total += battery.voltage();
+        delay(DELAY_BETWEEN_SAMPLES);
+    }
+    return total / NUM_SAMPLES;
+}
+
+
+
 String batteryVoltageRead() {
 
   //  Serial.println(battery.level());
   //  SerialMon.println(vbat);
-  return String(battery.level());
+    return String(getAverageBatteryLevel());
 }
 int batteryVoltageInt() {
 
   //  Serial.println(battery.level());
   //  SerialMon.println(vbat);
-  return int(battery.level());
+    return getAverageBatteryLevel();
 }
 
 void batteryVoltageCheck() {

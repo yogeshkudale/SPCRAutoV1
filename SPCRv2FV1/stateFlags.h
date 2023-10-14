@@ -13,7 +13,7 @@ int rightSwitchState = 0;
 int cleanRightFlag = 0;
 int cleanLeftFlag = 0;
 int resetFirmwareValue = 0;
-
+int updateFirmware = 0;
 
 //Remote Monitoring and Operation Flags
 int returnCall = 0; //Switch to 1 if want to call rebot back to initial position after pressing manual cleaning switch
